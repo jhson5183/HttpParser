@@ -1329,8 +1329,8 @@ containing a value of this type.
         public static final int action_mode_bar_stub=0x7f0c002d;
         public static final int action_mode_close_button=0x7f0c0020;
         public static final int activity_chooser_view_content=0x7f0c0021;
-        public static final int adapter_cover_img=0x7f0c0043;
-        public static final int adapter_cover_text=0x7f0c0044;
+        public static final int adapter_cover_img=0x7f0c0045;
+        public static final int adapter_cover_text=0x7f0c0046;
         public static final int always=0x7f0c0016;
         public static final int beginning=0x7f0c0013;
         public static final int checkbox=0x7f0c0029;
@@ -1339,6 +1339,7 @@ containing a value of this type.
         public static final int default_activity_button=0x7f0c0024;
         public static final int dialog=0x7f0c001b;
         public static final int disableHome=0x7f0c000c;
+        public static final int dom_btn=0x7f0c0043;
         public static final int dropdown=0x7f0c001c;
         public static final int edit_query=0x7f0c0033;
         public static final int end=0x7f0c0014;
@@ -1358,6 +1359,7 @@ containing a value of this type.
         public static final int progress=0x7f0c0042;
         public static final int progress_circular=0x7f0c0005;
         public static final int progress_horizontal=0x7f0c0006;
+        public static final int pull_btn=0x7f0c0044;
         public static final int radio=0x7f0c002b;
         public static final int recycler_view=0x7f0c0040;
         public static final int refresh_layout=0x7f0c003f;
@@ -1413,10 +1415,11 @@ containing a value of this type.
         public static final int abc_search_dropdown_item_icons_2line=0x7f040013;
         public static final int abc_search_view=0x7f040014;
         public static final int abc_simple_dropdown_hint=0x7f040015;
-        public static final int activity_main=0x7f040016;
-        public static final int adapter_image=0x7f040017;
-        public static final int empty_layout=0x7f040018;
-        public static final int support_simple_spinner_dropdown_item=0x7f040019;
+        public static final int activity_grid=0x7f040016;
+        public static final int activity_main=0x7f040017;
+        public static final int adapter_image=0x7f040018;
+        public static final int empty_layout=0x7f040019;
+        public static final int support_simple_spinner_dropdown_item=0x7f04001a;
     }
     public static final class mipmap {
         public static final int ic_launcher=0x7f030000;
@@ -1439,7 +1442,9 @@ containing a value of this type.
         public static final int abc_shareactionprovider_share_with_application=0x7f06000e;
         public static final int abc_toolbar_collapse_description=0x7f06000f;
         public static final int app_name=0x7f060010;
-        public static final int empty_text=0x7f060011;
+        public static final int dom_text=0x7f060011;
+        public static final int empty_text=0x7f060012;
+        public static final int pull_text=0x7f060013;
     }
     public static final class style {
         public static final int Animation_AppCompat_DropDownUp=0x7f07006a;

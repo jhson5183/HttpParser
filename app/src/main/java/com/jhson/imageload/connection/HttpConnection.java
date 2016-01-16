@@ -28,7 +28,6 @@ public class HttpConnection implements BaseConnection {
         try {
             mHttpURLConnection = (HttpURLConnection) url.openConnection();
             mHttpURLConnection.setConnectTimeout(15000);
-            mHttpURLConnection.connect();
             is = mHttpURLConnection.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();

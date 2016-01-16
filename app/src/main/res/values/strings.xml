@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ImageLoad</string>
+    <string name="empty_text">리스트가 없습니다.</string>
+</resources>

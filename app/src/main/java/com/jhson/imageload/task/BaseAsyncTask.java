@@ -6,6 +6,9 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * Created by INT-jhson5183 on 2016. 1. 14..
+ */
 public abstract class BaseAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
 	private final String TAG = "BaseAsyncTask";

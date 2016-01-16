@@ -1,4 +1,6 @@
-package com.jhson.imageload.parser;
+package com.jhson.imageload.parser.pull;
+
+import com.jhson.imageload.parser.BaseParser;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

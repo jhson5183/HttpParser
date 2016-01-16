@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import com.jhson.imageload.adpater.ImageAdapter;
 import com.jhson.imageload.connection.CacheHttpConnection;
 import com.jhson.imageload.model.ImageModel;
-import com.jhson.imageload.parser.ImageXmlPullParser;
+import com.jhson.imageload.parser.pull.ImageXmlPullParser;
 import com.jhson.imageload.task.BaseAsyncTask;
 import com.jhson.imageload.task.ImageParsingTask;
 import com.jhson.imageload.view.ImageLoadRecyclerView;

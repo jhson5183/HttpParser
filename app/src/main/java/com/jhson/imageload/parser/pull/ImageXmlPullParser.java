@@ -1,4 +1,4 @@
-package com.jhson.imageload.parser;
+package com.jhson.imageload.parser.pull;
 
 import com.jhson.imageload.model.ImageModel;
 

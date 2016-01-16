@@ -46,6 +46,10 @@ public class BaseActivity extends ActionBarActivity implements SwipeRefreshLayou
         loadData(false);
     }
 
+    /*
+    데이터를 로드하는 메서드
+    boolean isCacheRefresh 을 통해서 캐시된 데이터를 리플래시 할 것인지 정한다.
+     */
     protected void loadData(boolean isCacheRefresh){
 
     }

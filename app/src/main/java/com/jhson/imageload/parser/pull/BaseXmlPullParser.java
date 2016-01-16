@@ -11,16 +11,26 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
+ * XmlPullParser 베이스 클래스
  * Created by INT-jhson5183 on 2016. 1. 14..
  */
 public class BaseXmlPullParser<Result> extends BaseParser<Result> {
 
+    /*
+    파싱중 START_DOCUMENT 이벤트일때 호출 된다.
+     */
     protected void onStartDocument(XmlPullParser xmlPullParser){
     }
 
+    /*
+    파싱중 START_TAG 이벤트일 때 호출 된다.
+     */
     protected void onStartTag(XmlPullParser xmlPullParser){
     }
 
+    /*
+    파싱중 TEXT 이벤트일 때 호출 된다.
+     */
     protected void onText(XmlPullParser xmlPullParser){
     }
 

@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 /**
+ * 통신한 결과값을 캐시하고 전달하는 Connection class
  * Created by jhson on 2016-01-16.
  */
 public class CacheHttpConnection extends HttpConnection{
@@ -61,6 +62,9 @@ public class CacheHttpConnection extends HttpConnection{
         return is;
     }
 
+    /*
+    네트워크를 연결하여 데이터를 받아 디스크에 캐시
+     */
     private void saveCache(URL url, File cacheFile){
         long contentLenght = 0;
         InputStream is = getHttpInputStream(url);
@@ -90,6 +94,9 @@ public class CacheHttpConnection extends HttpConnection{
         return encodeName + ".html";
     }
 
+    /*
+    디스크에 캐시파일을 생성한다.
+     */
     private long saveCacheFile(File cacheFile, BufferedInputStream in, long contentLenght) {
 
         long lenght = -1;

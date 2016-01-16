@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Http, parser를 컨트롤 하며 실제로 실행되는 쓰레드
+ * 사용자가 생성자를 통해 정의한 파서와 커넥션을 가지고 통신,파싱을 한다.
  * Created by INT-jhson5183 on 2016. 1. 14..
  */
 public class ImageParsingTask extends BaseAsyncTask<String, Void, List<ImageModel>>{

@@ -26,30 +26,31 @@ public class DomParserActivity extends BaseActivity{
             @Override
             public void onParsingSuccess(List<ImageModel> imageModels) {
 
-                if(getApplicationContext() == null){
-                    return ;
+                if (getApplicationContext() == null) {
+                    return;
                 }
 
                 hideProgressView();
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (imageModels == null || imageModels.size() == 0) {
                     showEmptyView();
-                    return ;
+                    return;
                 }
                 hideEmptyView();
 
                 if (mRecyclerView != null) {
-                    if(mAdapter == null){
+                    if (mAdapter == null) {
                         mAdapter = new ImageAdapter(DomParserActivity.this, imageModels);
                         mRecyclerView.setAdapter(mAdapter);
-                    }else {
+                    } else {
                         mAdapter.setList(imageModels);
                         mAdapter.notifyDataSetChanged();
                     }
                 }
             }
         });
-        mImagePasingTask.execute("https://dl-ssl.google.com/android/repository/repository.xml");
+//        mImagePasingTask.execute("https://dl-ssl.google.com/android/repository/repository.xml");
+        mImagePasingTask.execute(HTTP_URL);
     }
 
 }

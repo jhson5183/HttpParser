@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * InputStream을 얻어오는 클래스
  * Created by jhson on 2016-01-16.
  */
 public class HttpConnection implements BaseConnection {

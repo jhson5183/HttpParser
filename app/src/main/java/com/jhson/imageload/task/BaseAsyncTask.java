@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
+ * 반환값을 리스너를 통해 전달하는 클래스
  * Created by INT-jhson5183 on 2016. 1. 14..
  */
 public abstract class BaseAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {

@@ -7,6 +7,8 @@ import org.xmlpull.v1.XmlPullParser;
 import java.util.ArrayList;
 
 /**
+ * ImageModel에 맞게 구현한 XmlPullParser
+ * ImageModel을 반환하며 파싱 규칙이 정의되어 있다.
  * Created by INT-jhson5183 on 2016. 1. 14..
  */
 public class ImageXmlPullParser extends BaseXmlPullParser<ImageModel> {

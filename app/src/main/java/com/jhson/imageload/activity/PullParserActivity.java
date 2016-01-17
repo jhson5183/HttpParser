@@ -21,7 +21,7 @@ public class PullParserActivity extends BaseActivity{
         if(mImagePasingTask != null){
             mImagePasingTask.cancel(true);
         }
-        mImagePasingTask = new ImageParsingTask(this, new ImageXmlPullParser(), new CacheHttpConnection(isCacheRefresh));
+        mImagePasingTask = new ImageParsingTask(this, new ImageXmlPullParser(), new CacheHttpConnection(this, isCacheRefresh));
         mImagePasingTask.setOnParsingLisnter(new BaseAsyncTask.OnParsingLisnter<List<ImageModel>>() {
             @Override
             public void onParsingSuccess(List<ImageModel> imageModels) {

@@ -1,5 +1,6 @@
 package com.jhson.imageload.connection;
 
+import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,9 +30,8 @@ public class CacheHttpConnection extends HttpConnection{
 
     private File mCacheDir = null;
     private boolean isCacheRefresh = false;
-    public CacheHttpConnection(boolean isCacheRefresh){
-        //        mCacheDir = context.getCacheDir();
-        mCacheDir = new File(Environment.getExternalStorageDirectory(), "sonload");
+    public CacheHttpConnection(Context context, boolean isCacheRefresh){
+        mCacheDir = new File(context.getCacheDir(), "sonload");
         this.isCacheRefresh = isCacheRefresh;
     }
 

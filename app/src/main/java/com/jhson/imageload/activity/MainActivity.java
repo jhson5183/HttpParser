@@ -57,9 +57,9 @@ public class MainActivity extends ActionBarActivity {
             return ;
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if(fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName()) != null){
-            return ;
-        }
+//        if(fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName()) != null){
+//            return ;
+//        }
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.content_fragment, fragment, fragment.getClass().getSimpleName());

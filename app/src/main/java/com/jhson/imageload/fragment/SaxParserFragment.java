@@ -23,7 +23,7 @@ public class SaxParserFragment extends BaseFragment {
         if(mImagePasingTask != null){
             mImagePasingTask.cancel(true);
         }
-        mImagePasingTask = new ImageParsingTask(getActivity(), new ImageSaxParser(), new CacheHttpConnection(isCacheRefresh));
+        mImagePasingTask = new ImageParsingTask(getActivity(), new ImageSaxParser(), new CacheHttpConnection(getActivity(), isCacheRefresh));
         mImagePasingTask.setOnParsingLisnter(new BaseAsyncTask.OnParsingLisnter<List<ImageModel>>() {
             @Override
             public void onParsingSuccess(List<ImageModel> imageModels) {

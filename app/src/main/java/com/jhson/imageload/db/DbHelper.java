@@ -1,8 +1,11 @@
 package com.jhson.imageload.db;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.jhson.imageload.db.cache.CacheDb;
 
 /**
  * Created by sonjunghyun on 2016. 1. 17..
@@ -24,35 +27,27 @@ public class DbHelper {
         return instance;
     }
 
-    public void init(Context context){
+    private void init(Context context){
 
-        CacheDb cacheDb = new CacheDb(context);
-        mDb = cacheDb.getWritableDatabase();
-
+        OpneHelper opneHelper = new OpneHelper(context);
+        mDb = opneHelper.getWritableDatabase();
     }
 
-    class CacheDb extends SQLiteOpenHelper{
-
-        public static final String ID = "id";
-        public static final String TABLE_NAME = "api_cache_info";
-        public static final String API_METHOD = "api_method";
-        public static final String NEXT_DATE = "next_date";
-        public final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
-                + "( "
-                + ID + " INTEGER primary key autoincrement, "
-                + API_METHOD + " TEXT unique,"
-                + NEXT_DATE + " INTEGER"
-                + ");";
+    public SQLiteDatabase getDb(){
+        return mDb;
+    }
 
 
-        public CacheDb(Context context) {
+
+    class OpneHelper extends SQLiteOpenHelper{
+
+        OpneHelper(Context context){
             super(context, "cache", null, 1);
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(CREATE_TABLE);
-
+            db.execSQL(CacheDb.CREATE_TABLE);
         }
 
         @Override

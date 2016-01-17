@@ -33,8 +33,6 @@ public class HttpConnection implements BaseConnection {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.e(TAG, "httpconnection is : " + is);
-
         return is;
     }
 

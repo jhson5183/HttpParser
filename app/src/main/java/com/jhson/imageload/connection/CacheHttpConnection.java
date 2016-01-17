@@ -1,9 +1,11 @@
 package com.jhson.imageload.connection;
 
 import android.content.Context;
-import android.os.Environment;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
+
+import com.jhson.imageload.db.cache.CacheDb;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -27,18 +29,34 @@ import java.util.TimeZone;
 public class CacheHttpConnection extends HttpConnection{
 
     private final String TAG = "CacheHttpConnection";
-
+    private final static long DEFUALT_CACHE_TTL = 60000 * 10;
     private File mCacheDir = null;
     private boolean isCacheRefresh = false;
+    private Context mContext = null;
+    private String mHttpUrl = null;
+    private long mTtl = 0;
+
     public CacheHttpConnection(Context context, boolean isCacheRefresh){
+        this(context, isCacheRefresh, DEFUALT_CACHE_TTL);
+    }
+
+    /*
+    캐시를 얼마나 유지 할 것인지 ttl을 통해서 정의 할수 있다. (단위는 ms)
+     */
+    public CacheHttpConnection(Context context, boolean isCacheRefresh, long ttl){
+        mContext = context;
         mCacheDir = new File(context.getCacheDir(), "sonload");
         this.isCacheRefresh = isCacheRefresh;
+        mTtl = ttl;
     }
+
+
 
     @Override
     public InputStream getInputStream(String httpUrl, Map<String, String> map) {
 
         InputStream is = null;
+        mHttpUrl = httpUrl;
         try{
             String apiUrl = getUrl(httpUrl, map);
             URL url = new URL(apiUrl);
@@ -49,16 +67,29 @@ public class CacheHttpConnection extends HttpConnection{
             String fileName = getCacheFile(apiUrl);
             File cacheFile = new File(cacheDir.getAbsoluteFile() + "/" + fileName);
             boolean cacheExists = cacheFile.exists();
-            if (!cacheExists || isCacheRefresh) {
+            CacheDb cacheDb = new CacheDb(mContext);
+            CacheDb.CacheCursor cursor = cacheDb.getCacheInfo(httpUrl);
+
+            boolean isCacheTimeOver = isCacheRefresh;
+            if(cursor != null){
+                Log.e(TAG, "System.currentTimeMillis() : " + DateFormat.format("yyyy.MM.dd hh:mm:ss", getCurrentTime()));
+                Log.e(TAG, "reg_date : " + DateFormat.format("yyyy.MM.dd hh:mm:ss", cursor.mRegDate) );
+                Log.e(TAG, "next_date : " + DateFormat.format("yyyy.MM.dd hh:mm:ss", cursor.mNextDate));
+            }
+            if(cursor != null && cursor.mNextDate < System.currentTimeMillis() && !isCacheRefresh){
+                isCacheTimeOver = true;
+            }
+
+            if (!cacheExists || isCacheTimeOver) {
                 saveCache(url, cacheFile);
             }
+            Log.e(TAG, (!cacheExists || isCacheTimeOver) ? "connection cache not hit" : "connection cache hit");
             is = new FileInputStream(cacheFile);
         }catch(MalformedURLException e){
             e.printStackTrace();
         }catch(IOException e){
             e.printStackTrace();
         }
-        Log.e(TAG, "cacheConnection : "  + is);
         return is;
     }
 
@@ -107,18 +138,34 @@ public class CacheHttpConnection extends HttpConnection{
         try {
             fout = new FileOutputStream(cacheFile);
             int read = 0;
+            int readLenght = 0;
             byte[] buffer = new byte[1024];
 
-            while((read = in.read(buffer, 0, buffer.length)) != -1){
+            while((read = in.read(buffer, 0, buffer.length)) > 0){
+                readLenght = read;
                 fout.write(buffer, 0, read);
             }
             fout.flush();
             fout.close();
 
+            Log.e(TAG, "readLenght : " + readLenght);
+            if(readLenght > 0){
+                CacheDb cacheDb = new CacheDb(mContext);
+                CacheDb.CacheCursor cursor = cacheDb.getCacheInfo(mHttpUrl);
+                if(cursor == null){
+                    long ret = cacheDb.addCacheInfo(mHttpUrl, getCurrentTime(), getCurrentTime() + mTtl);
+                    Log.e(TAG, "addCacheInfo : " + ret);
+                }else{
+                    long ret = cacheDb.updateCacheInfo(mHttpUrl, getCurrentTime(), getCurrentTime() + mTtl);
+                    Log.e(TAG, "updateCacheInfo : " + ret);
+                }
+            }
+
             lenght = cacheFile.length();
             if(lenght != contentLenght){
 //                cacheFile.delete();
             }
+
 
         } catch (IOException e) {
 
@@ -138,19 +185,6 @@ public class CacheHttpConnection extends HttpConnection{
             Log.e(TAG, "urlEncode err " + e.getMessage());
         }
         return "";
-    }
-
-    /**
-     * 현재 시간이 ttl 시간보다 지났는지 ( 높은지) 확인한다.
-     *
-     */
-    private boolean isPastTime(long ttl) {
-        if (ttl > 0) {
-            if (getCurrentTime() < ttl) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private long getCurrentTime() {

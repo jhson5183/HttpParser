@@ -7,6 +7,7 @@ import android.database.Cursor;
 import com.jhson.imageload.db.DbHelper;
 
 /**
+ * 캐시관련 정보를 담는 디비 URL을 키로 하며 이 URL을 갱신할 캐시시간을 가지고 있다.
  * Created by jhson on 2016-01-17.
  */
 public class CacheDb {

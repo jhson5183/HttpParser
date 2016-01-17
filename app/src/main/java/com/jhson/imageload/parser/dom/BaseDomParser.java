@@ -1,6 +1,8 @@
-package com.jhson.imageload.parser;
+package com.jhson.imageload.parser.dom;
 
 import android.util.Log;
+
+import com.jhson.imageload.parser.BaseParser;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,7 +21,7 @@ import javax.xml.parsers.ParserConfigurationException;
 /**
  * Created by jhson on 2016-01-16.
  */
-public class BaseDomParser<T> extends BaseParser<T>{
+public class BaseDomParser<T> extends BaseParser<T> {
 
     private final String TAG = "BaseDomParser";
 

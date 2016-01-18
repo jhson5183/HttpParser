@@ -99,14 +99,6 @@ public class MonetRequest {
 		}
 	}
 
-	// "DEBUG 용"
-	public MonetRequest() {
-		this.monet = null;
-		this.uri = null;
-		this.mThread = null;
-		this.mBuilder = new Builder();
-	}
-
 	public MonetRequest(NewMonet monet, String uri, int resourceId, Thread thread) {
 		this.monet = monet;
 		this.uri = uri;

@@ -47,7 +47,7 @@ public class NewMonet {
 
 	private HashMap<String, Thread> mDownloadingUrl = new HashMap<String, Thread>();
 	private ConcurrentHashMap<String, LinkedList<Thread>> mWaiting = new ConcurrentHashMap<String, LinkedList<Thread>>();
-	public ConcurrentLinkedQueue<Thread> mThreadQueue = new ConcurrentLinkedQueue<Thread>();
+	private ConcurrentLinkedQueue<Thread> mThreadQueue = new ConcurrentLinkedQueue<Thread>();
 	private HashMap<Integer, Long> mImageJobs = new HashMap<Integer, Long>();
 
 	// Load From Uri
@@ -210,7 +210,7 @@ public class NewMonet {
 				
 				if (null != mImageView) {
 					if (!unRegistRequest(mImageView.hashCode(), mCreateTime, false)) {
-						// jsyoo 해당 이미지뷰에 해당 스레드가 더이상 유효하지 않다면, 다른 스레드가 이미지뷰를 점유했으므로 자원을 뱉고 스레드 종
+						//  해당 이미지뷰에 해당 스레드가 더이상 유효하지 않다면, 다른 스레드가 이미지뷰를 점유했으므로 자원을 뱉고 스레드 종
 						Log.d(TAG, "request is invalidate");
 						unLock(url);
 						semaphore.release();
@@ -259,7 +259,7 @@ public class NewMonet {
 					
 					if (null != mImageView) {
 						if (!unRegistRequest(mImageView.hashCode(), mCreateTime, true)) {
-							// jsyoo 해당 이미지뷰에 해당 스레드가 더이상 유효하지 않다면, 다른 스레드가 이미지뷰를 점유했으므로 자원을 뱉고 스레드 종
+							//  해당 이미지뷰에 해당 스레드가 더이상 유효하지 않다면, 다른 스레드가 이미지뷰를 점유했으므로 자원을 뱉고 스레드 종
 							Log.d(TAG, "request is invalidate");
 							semaphore.release();
 							mThreadQueue.remove(this);
@@ -338,7 +338,7 @@ public class NewMonet {
 				
 				if (null != mImageView) {
 					if (!unRegistRequest(mImageView.hashCode(), mDLThreadId, false)) {
-						// jsyoo 해당 이미지뷰에 해당 스레드가 더이상 유효하지 않다면, 다른 스레드가 이미지뷰를 점유했으므로 자원을 뱉고 스레드 종
+						//  해당 이미지뷰에 해당 스레드가 더이상 유효하지 않다면, 다른 스레드가 이미지뷰를 점유했으므로 자원을 뱉고 스레드 종
 						Log.d(TAG, "request is invalidate");
 						semaphore.release();
 						mThreadQueue.remove(this);
@@ -369,7 +369,7 @@ public class NewMonet {
 					
 					if (null != mImageView) {
 						if (!unRegistRequest(mImageView.hashCode(), mDLThreadId, true)) {
-							// jsyoo 해당 이미지뷰에 해당 스레드가 더이상 유효하지 않다면, 다른 스레드가 이미지뷰를 점유했으므로 자원을 뱉고 스레드 종
+							//  해당 이미지뷰에 해당 스레드가 더이상 유효하지 않다면, 다른 스레드가 이미지뷰를 점유했으므로 자원을 뱉고 스레드 종
 							Log.d(TAG, "request is invalidate");
 							semaphore.release();
 							mThreadQueue.remove(this);
@@ -397,7 +397,7 @@ public class NewMonet {
 	}
 	
 	/** 이미지 요청에 대해 등록 */
-	public synchronized void registRequest(int hashCode, long threadId) {
+	private synchronized void registRequest(int hashCode, long threadId) {
 		
 //		try {
 //			if (!MonetRequest.sStartMethodTrace) {
@@ -451,8 +451,8 @@ public class NewMonet {
 	}
 	
 	/** 등록된 이미지 요청 제거 */
-	public synchronized boolean unRegistRequest(int hashCode, long threadId, boolean cancelJob) {
-		// jsyoo 동일한 이미지뷰에 대한 요청이 있었고 해당 스레드가 아직 유효한 작업이라면, 해당 이미지뷰에 대한 이미지뷰 요청내역 제거 (스레드 작업이 모두 끝났으므로) 
+	private synchronized boolean unRegistRequest(int hashCode, long threadId, boolean cancelJob) {
+		//  동일한 이미지뷰에 대한 요청이 있었고 해당 스레드가 아직 유효한 작업이라면, 해당 이미지뷰에 대한 이미지뷰 요청내역 제거 (스레드 작업이 모두 끝났으므로)
 		if (null != mImageJobs.get(hashCode)) {
 			Log.d(TAG, "jobs is valid");
 			if (mImageJobs.get(hashCode) == threadId) {

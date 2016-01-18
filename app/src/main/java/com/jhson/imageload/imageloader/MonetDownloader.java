@@ -191,7 +191,7 @@ public class MonetDownloader {
 						
 						// 성공적으로 이미지를 캐시한 경우 메모리 캐시에 올린다. 
 						if (result) {
-							// jsyoo 스트림을 메모리캐시도 시켜둠.
+							//  스트림을 메모리캐시도 시켜둠.
 							BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
 							decodeOptions.inPreferredConfig = Config.RGB_565;
 	//			            decodeOptions.inPurgeable = true;

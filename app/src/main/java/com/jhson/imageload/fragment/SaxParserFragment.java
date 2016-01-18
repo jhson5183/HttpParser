@@ -53,4 +53,12 @@ public class SaxParserFragment extends BaseFragment {
         });
         mImagePasingTask.execute(HTTP_URL);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(mImagePasingTask != null){
+            mImagePasingTask.cancel(true);
+        }
+    }
 }

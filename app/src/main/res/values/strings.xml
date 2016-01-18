@@ -3,4 +3,5 @@
     <string name="empty_text">리스트가 없습니다.</string>
     <string name="dom_text">Dom 파서</string>
     <string name="pull_text">Pull 파서</string>
+    <string name="sax_text">SAX 파서</string>
 </resources>

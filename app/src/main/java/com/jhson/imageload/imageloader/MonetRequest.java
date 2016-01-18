@@ -129,11 +129,6 @@ public class MonetRequest {
 		};
 	}
 
-	public Bitmap getBitmap() {
-		Bitmap bm = null;
-		return bm;
-	}
-
 	public Builder getBuilder() {
 		return mBuilder;
 	}
@@ -180,26 +175,8 @@ public class MonetRequest {
 			return;
 		}
 
-//		if (mBuilder.placeholderId != 0 && mImageView != null) {
-//			imageView.setImageResource(mBuilder.placeholderId);
-//		}
-//		if (mThread.getClass().getSimpleName().contains("DLThread")) {
-			((DLThread) mThread).setImageView(imageView);
-			((DLThread) mThread).setRequest(this);
-//		} else {
-//			((BMThread) mThread).setImageView(imageView);
-//			((BMThread) mThread).setRequest(this);
-//		}
-
-//		try {
-//			if (!isStart && sStartMethodTrace) {
-//				Debug.startMethodTracing("" + System.currentTimeMillis());
-//				isStart = true;
-//			}
-//		} catch (Exception e) {
-//		}
-
-//		Log.d(TAG, "native heap = " + Debug.getNativeHeapSize() + ", native allocated = " + Debug.getNativeHeapAllocatedSize());
+		((DLThread) mThread).setImageView(imageView);
+		((DLThread) mThread).setRequest(this);
 
 		mThread.start();
 	}
@@ -211,11 +188,7 @@ public class MonetRequest {
 		}
 
 
-//		if (mThread.getClass().getSimpleName().contains("DLThread")) {
-			((DLThread) mThread).setRequest(this);
-//		} else {
-//			((BMThread) mThread).setRequest(this);
-//		}
+		((DLThread) mThread).setRequest(this);
 		mThread.start();
 	}
 

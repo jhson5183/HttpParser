@@ -330,10 +330,6 @@ public class NewMonet {
 		public void run() {
 			super.run();
 			try {
-//				if (null != mImageView) {
-//					registRequest(mImageView.hashCode(), getId());
-//				}
-				
 				semaphore.acquire();
 				
 				if (null != mImageView) {
@@ -375,11 +371,8 @@ public class NewMonet {
 							mThreadQueue.remove(this);
 							return;
 						}
-//						Log.d(TAG, "request is comp");
 					}
 					sImageHandler.post(mRequest.new ImageRunnable(raw, mImageView));
-					
-//					sImageHandler.post(mRequest.new ImageRunnable(raw, mImageView));
 					semaphore.release();
 					mThreadQueue.remove(this);
 					break;

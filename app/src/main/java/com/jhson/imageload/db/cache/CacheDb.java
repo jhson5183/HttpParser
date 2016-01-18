@@ -58,6 +58,9 @@ public class CacheDb {
         contentValues.put(CacheDb.REG_DATE, regDate);
         contentValues.put(CacheDb.NEXT_DATE, nextDate);
 
+//        String sql = "INSERT INTO " + CacheDb.TABLE_NAME + " VALUES (" + url + ", " + regDate + ", " + nextDate;
+//        DbHelper.getInstance(mContext).getDb().execSQL(sql);
+
         return DbHelper.getInstance(mContext).getDb().insert(CacheDb.TABLE_NAME, null, contentValues);
     }
 
@@ -66,8 +69,11 @@ public class CacheDb {
         ContentValues contentValues = new ContentValues();
         contentValues.put(CacheDb.NEXT_DATE, nextDate);
         contentValues.put(CacheDb.REG_DATE, regDate);
-        return DbHelper.getInstance(mContext).getDb().update(CacheDb.TABLE_NAME, contentValues, CacheDb.URL + " = ? ", new String[] {url});
 
+//        String sql = "UPDATE " + CacheDb.TABLE_NAME + " SET " + CacheDb.NEXT_DATE + " = " + nextDate + " ," + CacheDb.REG_DATE + " = " + regDate + " WHERE " + CacheDb.URL + " = " + url;
+//        DbHelper.getInstance(mContext).getDb().execSQL(sql);
+
+        return DbHelper.getInstance(mContext).getDb().update(CacheDb.TABLE_NAME, contentValues, CacheDb.URL + " = ? ", new String[] {url});
     }
 
     public class CacheCursor{

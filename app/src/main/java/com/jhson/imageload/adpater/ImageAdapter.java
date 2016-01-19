@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jhson.imageload.R;
-import com.jhson.imageload.imageloader.NewMonet;
+import com.jhson.imageload.imageloader.Gogh;
 import com.jhson.imageload.model.ImageModel;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class ImageAdapter extends RecyclerView.Adapter{
         CoverViewHolder coverViewholder = (CoverViewHolder)holder;
 
         coverViewholder.mTextView.setText(data.getmTitle());
-        NewMonet.with(mContext).load(data.getmImageUrl()).into(coverViewholder.mImageView);
+        Gogh.with(mContext).load(data.getmImageUrl()).into(coverViewholder.mImageView);
 
     }
 

@@ -48,10 +48,6 @@ public class NewBitmapManager {
 	}
 
 	public synchronized Bitmap getBitmapImage(String url, final File file, int width, int height) {
-//		Bitmap bm = getBitmapFromMemCache(TextUtils.isEmpty(url)? file.getName() : url);
-//		if (bm != null) {
-//			return bm;
-//		}
 		Bitmap bm = null;
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inPreferredConfig = Config.RGB_565;

@@ -1,6 +1,6 @@
 package com.jhson.imageload.imageloader;
 
-public class MonetOptions {
+public class GoghOptions {
 
 	private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
 	public static final int NETWORK_POOL_SIZE = CPU_COUNT * 2 + 1;

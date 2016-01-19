@@ -18,9 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 
-public class MonetDownloader {
+public class GoghDownloader {
 
-	private static final String TAG = "MonetDownloader";
+	private static final String TAG = "GoghDownloader";
 
 	private DownloadListener mListener;
 	private ErrorToastListener mErrorListener;
@@ -29,7 +29,7 @@ public class MonetDownloader {
 
 	private static final int BUFFER_SIZE = 8 * 1024;
 
-	public MonetDownloader(Context context) {
+	public GoghDownloader() {
 		HttpManager.init("");
 	}
 
@@ -46,7 +46,7 @@ public class MonetDownloader {
 		return cachedFile;
 	}
 
-	public boolean get(Context context, String strUrl, File cachedFile) {
+	public boolean get(String strUrl, File cachedFile) {
 		mIsStop = false;
 
 		if (strUrl == null || strUrl.length() == 0) {

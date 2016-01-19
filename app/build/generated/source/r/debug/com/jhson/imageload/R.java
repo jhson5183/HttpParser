@@ -1446,6 +1446,7 @@ containing a value of this type.
         public static final int dom_text=0x7f060011;
         public static final int empty_text=0x7f060012;
         public static final int pull_text=0x7f060013;
+        public static final int sax_text=0x7f060014;
     }
     public static final class style {
         public static final int Animation_AppCompat_DropDownUp=0x7f07006a;

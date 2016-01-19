@@ -2,7 +2,6 @@ package com.jhson.imageload.imageloader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Process;
@@ -10,26 +9,20 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.jhson.imageload.imageloader.process.Blur;
-
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 
-public class NewMonet {
+public class Gogh {
 
-	private static final String TAG = "NewMonet";
+	private static final String TAG = "Gogh";
 
 	private Context mContext;
 
@@ -40,19 +33,19 @@ public class NewMonet {
 	protected static ThreadPoolExecutor mNetworkExecutor;
 	protected static Handler sImageHandler;
 
-	private static NewMonet instance = null;
+	private static Gogh instance = null;
 	private static Bitmap mBitmap = null;
 
-	private NewMonet(Context context) {
+	private Gogh(Context context) {
 		this.mContext = context;
 		sImageHandler = new Handler(Looper.getMainLooper());
 	}
 
-	public static NewMonet with(Context context) {
+	public static Gogh with(Context context) {
 		if (instance == null) {
-			instance = new NewMonet(context);
-			mCacheExecutor = new ThreadPoolExecutor(MonetOptions.CACHE_POOL_SIZE, MonetOptions.CACHE_POOL_SIZE, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new MonetThreadFactory());
-			mNetworkExecutor = new ThreadPoolExecutor(MonetOptions.NETWORK_POOL_SIZE, MonetOptions.NETWORK_POOL_SIZE, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new MonetThreadFactory());
+			instance = new Gogh(context);
+			mCacheExecutor = new ThreadPoolExecutor(GoghOptions.CACHE_POOL_SIZE, GoghOptions.CACHE_POOL_SIZE, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new MonetThreadFactory());
+			mNetworkExecutor = new ThreadPoolExecutor(GoghOptions.NETWORK_POOL_SIZE, GoghOptions.NETWORK_POOL_SIZE, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new MonetThreadFactory());
 		}
 		return instance;
 	}
@@ -75,28 +68,14 @@ public class NewMonet {
 	}
 
 	/** Load From String */
-	public MonetRequest load(String uri) {
-		if (TextUtils.isEmpty(uri))
-			return new MonetRequest("", instance);
-		return new MonetRequest(uri, instance);
-	}
-
-	/** Load From Uri */
-	public MonetRequest load(Uri uri) {
-		if (null == uri)
-			return new MonetRequest("", instance);
-		return new MonetRequest(uri.toString(), instance);
-	}
-
-	/** Load From File */
-	public MonetRequest load(File file) {
-		if (file == null)
-			return new MonetRequest("", instance);
-		return load(Uri.fromFile(file).toString());
+	public GoghRequest load(String url) {
+		if (TextUtils.isEmpty(url))
+			return new GoghRequest("", instance);
+		return new GoghRequest(url, instance);
 	}
 
 	/** 요청 처리 */
-	protected void executeRequest(String uri, long viewHashCode, MonetRequest request) {
+	protected void executeRequest(String uri, long viewHashCode, GoghRequest request) {
 
 		mBitmap = getImageInMemory(uri);
 		Runnable cacheRunnable;
@@ -114,7 +93,7 @@ public class NewMonet {
 	}
 
 	/** 네트워크 요청 */
-	protected void executeNetworkRequest(String uri, long viewHashCode, MonetRequest request, Runnable requestedRunnable) {
+	protected void executeNetworkRequest(String uri, long viewHashCode, GoghRequest request, Runnable requestedRunnable) {
 		Runnable networkRunnable = new NetworkTask(mContext, uri, viewHashCode, request);
 		changeRequest(viewHashCode, requestedRunnable, networkRunnable);
 		mNetworkExecutor.submit(networkRunnable);
@@ -146,14 +125,6 @@ public class NewMonet {
 
 	/** 이미지 요청에 대해 등록 */
 	protected void registRequest(long hashCode, Runnable task) {
-//		try {
-//			if (!sStartMethodTrace) {
-//				Debug.stopMethodTracing();
-//				isStart = false;
-//			}
-//		} catch (Exception e) {
-//
-//		}
 		if (hashCode <= 0) return;
 
 		if (mRegisteredJobs.containsKey(hashCode)) {

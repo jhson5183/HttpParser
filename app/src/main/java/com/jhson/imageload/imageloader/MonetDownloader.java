@@ -18,18 +18,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 
-/**
- * 
- * 이미지 전용 다운로더
- * 
- * @author prios
- * 
- */
 public class MonetDownloader {
 
 	private static final String TAG = "MonetDownloader";
 
-	// private Context mContext;
 	private DownloadListener mListener;
 	private ErrorToastListener mErrorListener;
 
@@ -38,39 +30,7 @@ public class MonetDownloader {
 	private static final int BUFFER_SIZE = 8 * 1024;
 
 	public MonetDownloader(Context context) {
-		// this.mContext = context;
-		// TODO: Check User Agent
 		HttpManager.init("");
-		
-	}
-
-	public void setDownloadListener(DownloadListener listener) {
-		mListener = listener;
-	}
-
-	public void setErrorToastListener(ErrorToastListener listener) {
-		mErrorListener = listener;
-	}
-
-	public void stop() {
-		mIsStop = true;
-	}
-
-	public static boolean removeCache(Context context) {
-		File cacheDir = null;
-		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			cacheDir = new File(context.getApplicationContext().getExternalCacheDir(), "/cache");
-		} else {
-			cacheDir = new File(context.getCacheDir(), "/cache");
-		}
-		
-		if (cacheDir.exists() && cacheDir.isDirectory() && cacheDir.listFiles().length != 0) {
-			for (File file : cacheDir.listFiles())
-				file.delete();
-			return true;
-		}
-		return false;
-
 	}
 
 	public synchronized static File getCachedImageFile(String strUrl, Context context) {
@@ -154,25 +114,6 @@ public class MonetDownloader {
 
 					tempOutStream.writeTo(out);
 					
-//					in = new ByteArrayInputStream(tempOutStream.toByteArray());
-					
-					
-//					while ((read = in.read(b)) != -1) {
-//						if (mIsStop) { // 받고 있는 중에 중단 한다.
-//							in.close();
-//							out.close();
-//							tmpFile.delete();
-//							breakFlag = true;
-//							break;
-//						}
-//						out.write(b, 0, read);
-//
-//						current += read;
-//						if (mListener != null) {
-//							mListener.onProgress(current, contentLength);
-//						}
-//					}
-					
 					if (breakFlag)
 						return false;
 
@@ -248,6 +189,35 @@ public class MonetDownloader {
 
 	public static interface ErrorToastListener {
 		public void onError(String msg);
+	}
+
+	public void setDownloadListener(DownloadListener listener) {
+		mListener = listener;
+	}
+
+	public void setErrorToastListener(ErrorToastListener listener) {
+		mErrorListener = listener;
+	}
+
+	public void stop() {
+		mIsStop = true;
+	}
+
+	public static boolean removeCache(Context context) {
+		File cacheDir = null;
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			cacheDir = new File(context.getApplicationContext().getExternalCacheDir(), "/cache");
+		} else {
+			cacheDir = new File(context.getCacheDir(), "/cache");
+		}
+
+		if (cacheDir.exists() && cacheDir.isDirectory() && cacheDir.listFiles().length != 0) {
+			for (File file : cacheDir.listFiles())
+				file.delete();
+			return true;
+		}
+		return false;
+
 	}
 
 }

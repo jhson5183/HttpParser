@@ -1,11 +1,11 @@
 package com.jhson.imageload.imageloader;
 
 import android.graphics.Bitmap;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
+
 import com.jhson.imageload.imageloader.NewMonet.MonetListener;
-import com.jhson.imageload.imageloader.NewMonet.DLThread;
+
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class MonetRequest {
@@ -15,20 +15,12 @@ public class MonetRequest {
 //	public static boolean sStartMethodTrace = false;
 //	public static boolean isStart = false;
 
-	private static final int DURATION_ALPHA_ANIM = 100;
-
 	public static final int TRANSPARENT = 0;
 
-	public static final int CLIP_TYPE_NONE = 0;
-	public static final int CLIP_TYPE_CENTER = 1;
-	public static final int CLIP_TYPE_LONGSIDE = 2;
-
-	private final NewMonet monet;
-	private final String uri;
-	private final Thread mThread;
+	private String mUri;
 	private Builder mBuilder;
-	private MonetCustom mCustom = null;
 	private ImageView mImageView;
+	private NewMonet mMonetInstance;
 
 	public class Builder {
 		public int width = -1;
@@ -37,10 +29,9 @@ public class MonetRequest {
 		public int blur = 0;
 		public float alpha = 1;
 		public int placeholderId = 0;
-		public int clipType = CLIP_TYPE_NONE;
+		public boolean clip = false;
 		public int blankColor = TRANSPARENT;
 		public int errorId = 0;
-		public boolean fadeInOn = true;
 		public MonetListener listener = null;
 		public MonetListener defaultListener = null;
 	}
@@ -48,93 +39,71 @@ public class MonetRequest {
 	public class ImageRunnable implements Runnable {
 
 		private Bitmap bm;
-		private ImageView iv;
 
-		public ImageRunnable(Bitmap bm, ImageView iv) {
+		public ImageRunnable(Bitmap bm) {
 			this.bm = bm;
-			this.iv = iv;
 		}
 
 		@Override
 		public void run() {
 			if (MonetRequest.this.mBuilder.listener != null) {
 				if (bm != null) {
-					if (iv != null) {
-						if (mBuilder.fadeInOn) {
-							AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
-							anim.setInterpolator(new AccelerateInterpolator());
-							anim.setDuration(DURATION_ALPHA_ANIM);
-							iv.startAnimation(anim);
-						}
-					}
-					MonetRequest.this.mBuilder.listener.onLoaded(iv, bm);
+					MonetRequest.this.mBuilder.listener.onLoaded(mImageView, bm);
 				} else {
-					if (iv != null) {
-						if (mBuilder.placeholderId != 0)
-							iv.setImageResource(mBuilder.placeholderId);
-					}
 					MonetRequest.this.mBuilder.listener.onFailed();
 				}
 
 			} else {
 				if (bm != null) {
-					if (iv != null) {
-						if (mBuilder.fadeInOn) {
-							AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
-							anim.setInterpolator(new AccelerateInterpolator());
-							anim.setDuration(DURATION_ALPHA_ANIM);
-							iv.startAnimation(anim);
-						}
-					}
-					MonetRequest.this.mBuilder.defaultListener.onLoaded(iv, bm);
+					MonetRequest.this.mBuilder.defaultListener.onLoaded(mImageView, bm);
 				} else {
 					MonetRequest.this.mBuilder.defaultListener.onFailed();
-					if (iv != null) {
-						if (mBuilder.placeholderId != 0) {
-							iv.setImageResource(mBuilder.placeholderId);
-						}
-					}
 				}
 			}
 		}
 	}
 
-	public MonetRequest(NewMonet monet, String uri, int resourceId, Thread thread) {
-		this.monet = monet;
-		this.uri = uri;
+	public MonetRequest(String uri, NewMonet monet) {
+		this.mUri = uri;
+		this.mMonetInstance = monet;
 		this.mBuilder = new Builder();
-		this.mThread = thread;
 
 		mBuilder.defaultListener = new MonetListener() {
 
 			@Override
 			public void onLoaded(ImageView iv, Bitmap bm) {
-				if (iv != null && bm != null) {
-					iv.setImageBitmap(bm);
-
-//					if (mBuilder.fadeInOn) {
-//						AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
-//						anim.setDuration(1000);
-//						iv.startAnimation(anim);
-//					}
-				}
+				if (null != mImageView && null != bm)
+					mImageView.setImageBitmap(bm);
 			}
 
 			@Override
 			public void onFailed() {
-				if (mBuilder.errorId != 0) {
+				if (null != mImageView && mBuilder.errorId != 0) {
 					mImageView.setImageResource(mBuilder.errorId);
 				}
 			}
 		};
 	}
 
-	public Builder getBuilder() {
-		return mBuilder;
+	public void into(ImageView imageView) {
+		mImageView = imageView;
+		mImageView.setImageBitmap(null);
+
+		if (mBuilder.placeholderId != 0) {
+			imageView.setImageResource(mBuilder.placeholderId);
+		} else {
+			imageView.setImageDrawable(null);
+		}
+
+		mMonetInstance.executeRequest(mUri, imageView.hashCode(), this);
 	}
 
-	public MonetCustom getCustom() {
-		return mCustom;
+	public void into() {
+		mMonetInstance.executeRequest(mUri, -1, this);
+	}
+
+	public Builder getBuilder() {
+		return mBuilder;
 	}
 
 	public MonetRequest listener(MonetListener listener) {
@@ -150,46 +119,6 @@ public class MonetRequest {
 	public MonetRequest error(int resourceId) {
 		mBuilder.errorId = resourceId;
 		return this;
-	}
-
-	public interface MonetCustom {
-		public Bitmap editBitmap(Bitmap bitmap);
-	}
-
-	public MonetRequest custom(MonetCustom monetCustom) {
-		mCustom = monetCustom;
-		return this;
-	}
-
-	public void into(ImageView imageView) {
-		mImageView = imageView;
-
-		if (mBuilder.fadeInOn && mImageView != null) {
-			mImageView.setImageBitmap(null);
-//			mBuilder.backgroundDrawable = mImageView.getBackground();
-//			mImageView.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-		}
-
-		if (mThread == null){
-			onFail();
-			return;
-		}
-
-		((DLThread) mThread).setImageView(imageView);
-		((DLThread) mThread).setRequest(this);
-
-		mThread.start();
-	}
-
-	public void into() {
-		if (mThread == null){
-			onFail();
-			return;
-		}
-
-
-		((DLThread) mThread).setRequest(this);
-		mThread.start();
 	}
 
 	public MonetRequest resize(int width, int height) {
@@ -209,19 +138,14 @@ public class MonetRequest {
 		return this;
 	}
 
-	public MonetRequest setFadeIn(boolean fadeInOn) {
-		mBuilder.fadeInOn = fadeInOn;
-		return this;
-	}
-
 	/**
 	 * 이미지를 정사각형으로 생성하기 위한 옵션 정의
-	 * @param clipType CLIP_TYPE_NONE: 너비와 높이 중 긴 길이로 정사각형 생성(여백생성). CLIP_TYPE_CENTER: 중앙 기준으로 잘라냄. CLIP_TYPE_LONGSIDE: 긴면의 뒤쪽(세로면 아래쪽, 가로면 우측)을 잘라냄.
+	 * @param clip	true: 너비와 높이 중 짤은 길이로 정사각형 이미지 생성(잘라냄).	false: 너비와 높이 중 긴 길이로 정사각형 생성(여백생성).
 	 * @param blankColor	clip == true 인 경우, 여백을 채울 색. clip == false 인 경우, 의미 없음.
 	 * @return
 	 */
-	public MonetRequest setSquareOption(int clipType, int blankColor) {
-		mBuilder.clipType = clipType;
+	public MonetRequest setSquareOption(boolean clip, int blankColor) {
+		mBuilder.clip = clip;
 		mBuilder.blankColor = blankColor;
 		return this;
 	}
@@ -235,25 +159,5 @@ public class MonetRequest {
 	public MonetRequest simpleSize(int simpleSize) {
 		mBuilder.simpleSize = simpleSize;
 		return this;
-	}
-
-	private void onLoaded(ImageView iv, Bitmap bm){
-		if(mBuilder != null){
-			if(mBuilder.listener != null){
-				mBuilder.listener.onLoaded(iv, bm);
-			} else if(mBuilder.defaultListener != null){
-				mBuilder.defaultListener.onLoaded(iv, bm);
-			}
-		}
-	}
-
-	private void onFail(){
-		if(mBuilder != null){
-			if(mBuilder.listener != null){
-				mBuilder.listener.onFailed();
-			} else if(mBuilder.defaultListener != null){
-				mBuilder.defaultListener.onFailed();
-			}
-		}
 	}
 }

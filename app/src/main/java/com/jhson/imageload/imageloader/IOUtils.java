@@ -9,7 +9,6 @@ import android.util.Log;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -29,22 +28,6 @@ public final class IOUtils {
                 Log.e(TAG, "Could not close stream");
             }
         }
-    }
-    
-    /**
-     * 
-     * @param stream
-     * @return
-     */
-    public static boolean sync(FileOutputStream stream) {
-        try {
-            if (stream != null) {
-                stream.getFD().sync();
-            }
-            return true;
-        } catch (IOException e) {
-        }
-        return false;
     }
     
     /** 네트워크에 연결되었는지 여부를 체크 */

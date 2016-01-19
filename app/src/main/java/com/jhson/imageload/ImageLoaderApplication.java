@@ -22,6 +22,7 @@ public class ImageLoaderApplication extends Application{
     public void onTerminate() {
         DbHelper.getInstance(getApplicationContext()).getDb().close();
         NewBitmapManager.getInstrance().clearMemoryCache();
+//        NewMonet.with(getApplicationContext()).clear();
 
         super.onTerminate();
     }

@@ -27,18 +27,18 @@ public class NetworkTask implements Runnable {
 
     @Override
     public void run() {
-        if (!Gogh.with(mContext).isValidRequest(mViewHashCode, this))
+        if (!Gogh.getInstance(mContext).isValidRequest(mViewHashCode, this))
             return;
 
-        if (Gogh.with(mContext).mWaitingJobs.containsKey(mUrl)) { // "다운로드 중인 동일한 URL 이 있다면."
+        if (Gogh.getInstance(mContext).mWaitingJobs.containsKey(mUrl)) { // "다운로드 중인 동일한 URL 이 있다면."
             try {
-                LinkedList<Runnable> waitingSameUrl = Gogh.with(mContext).mWaitingJobs.get(mUrl);
+                LinkedList<Runnable> waitingSameUrl = Gogh.getInstance(mContext).mWaitingJobs.get(mUrl);
                 if (waitingSameUrl != null) {
                     waitingSameUrl.add(this);
                 } else {
                     LinkedList<Runnable> waitingUrl = new LinkedList<Runnable>();
                     waitingUrl.add(this);
-                    Gogh.with(mContext).mWaitingJobs.put(mUrl, waitingUrl);
+                    Gogh.getInstance(mContext).mWaitingJobs.put(mUrl, waitingUrl);
                 }
                 synchronized (this) {
                     wait();
@@ -48,8 +48,8 @@ public class NetworkTask implements Runnable {
             }
         }
 
-        if (!Gogh.with(mContext).isValidRequest(mViewHashCode, this)) {
-            Gogh.with(mContext).unLock(mUrl);
+        if (!Gogh.getInstance(mContext).isValidRequest(mViewHashCode, this)) {
+            Gogh.getInstance(mContext).unLock(mUrl);
             return;
         }
 
@@ -59,16 +59,16 @@ public class NetworkTask implements Runnable {
             mDownloader.get(mUrl, cachedFile); // "error 이면."
         }
 
-        Gogh.with(mContext).unLock(mUrl); // "다운로드 실패가 발생해도 모두 잡혀있는 쓰레드 UNLOCK 해야한다."
+        Gogh.getInstance(mContext).unLock(mUrl); // "다운로드 실패가 발생해도 모두 잡혀있는 쓰레드 UNLOCK 해야한다."
 
         Bitmap raw = NewBitmapManager.getInstrance().getBitmapImage(mUrl, cachedFile, mRequest.getBuilder().width, mRequest.getBuilder().height);
 
         if (mViewHashCode > 0) {
-            if (!Gogh.with(mContext).unRegistRequest(mViewHashCode, this, true)) {
+            if (!Gogh.getInstance(mContext).unRegistRequest(mViewHashCode, this, true)) {
                 // 해당 이미지뷰에 해당 스레드가 더이상 유효하지 않다면, 다른 스레드가 이미지뷰를 점유했으므로 자원을 뱉고 스레드 종
                 return;
             }
         }
-        Gogh.with(mContext).sImageHandler.post(mRequest.new ImageRunnable(raw));
+        Gogh.getInstance(mContext).sImageHandler.post(mRequest.new ImageRunnable(raw));
     }
 }

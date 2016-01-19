@@ -22,7 +22,7 @@ public class CacheTask implements Runnable {
 
     @Override
     public void run() {
-        if (!Gogh.with(mContext).isValidRequest(mViewHashCode, this))
+        if (!Gogh.getInstance(mContext).isValidRequest(mViewHashCode, this))
             return;
 
         int width = mRequest.getBuilder().width;
@@ -32,16 +32,16 @@ public class CacheTask implements Runnable {
 
         if (null != raw) {
             if (mViewHashCode > 0) {
-                if (!Gogh.with(mContext).unRegistRequest(mViewHashCode, this, true)) {
+                if (!Gogh.getInstance(mContext).unRegistRequest(mViewHashCode, this, true)) {
                     // 해당 이미지뷰에 해당 스레드가 더이상 유효하지 않다면, 다른 스레드가 이미지뷰를 점유했으므로 자원을 뱉고 스레드 종
                     Log.d(TAG, "request is invalidate");
                     return;
                 }
             }
             Log.d(TAG, "request is comp");
-            Gogh.with(mContext).sImageHandler.post(mRequest.new ImageRunnable(raw));
+            Gogh.getInstance(mContext).sImageHandler.post(mRequest.new ImageRunnable(raw));
         } else {
-            Gogh.with(mContext).executeNetworkRequest(mUri, mViewHashCode, mRequest, this);
+            Gogh.getInstance(mContext).executeNetworkRequest(mUri, mViewHashCode, mRequest, this);
         }
     }
 }

@@ -49,7 +49,7 @@ public class ImageAdapter extends RecyclerView.Adapter{
         CoverViewHolder coverViewholder = (CoverViewHolder)holder;
 
         coverViewholder.mTextView.setText(data.getmTitle());
-        Gogh.with(mContext).load(data.getmImageUrl()).into(coverViewholder.mImageView);
+        Gogh.getInstance(mContext).load(data.getmImageUrl()).into(coverViewholder.mImageView);
 
     }
 

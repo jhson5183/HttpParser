@@ -14,14 +14,14 @@ public class ImageLoaderApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        Gogh.with(getApplicationContext()); // "초기화."
+        Gogh.getInstance(getApplicationContext()); // "초기화."
     }
 
     @Override
     public void onTerminate() {
         DbHelper.getInstance(getApplicationContext()).getDb().close();
         NewBitmapManager.getInstrance().clearMemoryCache();
-//        Gogh.with(getApplicationContext()).clear();
+//        Gogh.getInstance(getApplicationContext()).clear();
 
         super.onTerminate();
     }

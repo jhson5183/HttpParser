@@ -41,7 +41,7 @@ public class Gogh {
 		sImageHandler = new Handler(Looper.getMainLooper());
 	}
 
-	public static Gogh with(Context context) {
+	public static Gogh getInstance(Context context) {
 		if (instance == null) {
 			instance = new Gogh(context);
 			mCacheExecutor = new ThreadPoolExecutor(GoghOptions.CACHE_POOL_SIZE, GoghOptions.CACHE_POOL_SIZE, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new MonetThreadFactory());

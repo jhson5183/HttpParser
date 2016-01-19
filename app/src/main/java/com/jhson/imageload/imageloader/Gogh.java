@@ -44,20 +44,20 @@ public class Gogh {
 	public static Gogh getInstance(Context context) {
 		if (instance == null) {
 			instance = new Gogh(context);
-			mCacheExecutor = new ThreadPoolExecutor(GoghOptions.CACHE_POOL_SIZE, GoghOptions.CACHE_POOL_SIZE, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new MonetThreadFactory());
-			mNetworkExecutor = new ThreadPoolExecutor(GoghOptions.NETWORK_POOL_SIZE, GoghOptions.NETWORK_POOL_SIZE, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new MonetThreadFactory());
+			mCacheExecutor = new ThreadPoolExecutor(GoghOptions.CACHE_POOL_SIZE, GoghOptions.CACHE_POOL_SIZE, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new GoghThreadFactory());
+			mNetworkExecutor = new ThreadPoolExecutor(GoghOptions.NETWORK_POOL_SIZE, GoghOptions.NETWORK_POOL_SIZE, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new GoghThreadFactory());
 		}
 		return instance;
 	}
 
-	static class MonetThreadFactory implements ThreadFactory {
+	static class GoghThreadFactory implements ThreadFactory {
 		public Thread newThread(Runnable r) {
-			return new MonetThread(r);
+			return new GoghThread(r);
 		}
 	}
 
-	private static class MonetThread extends Thread {
-		public MonetThread(Runnable r) {
+	private static class GoghThread extends Thread {
+		public GoghThread(Runnable r) {
 			super(r);
 		}
 		@Override
@@ -78,17 +78,17 @@ public class Gogh {
 	protected void executeRequest(String uri, long viewHashCode, GoghRequest request) {
 
 		mBitmap = getImageInMemory(uri);
-		Runnable cacheRunnable;
-		if (null != mBitmap) {
+		Runnable runnable;
+		if (mBitmap != null) {
 			Log.d(TAG, "request is comp by mem cache");
-			cacheRunnable = new Runnable() {@Override public void run() {}};
-			registRequest(viewHashCode, cacheRunnable);
-			unRegistRequest(viewHashCode, cacheRunnable, true);
+			runnable = new Runnable() {@Override public void run() {}};
+			registRequest(viewHashCode, runnable);
+			unRegistRequest(viewHashCode, runnable, true);
 			sImageHandler.post(request.new ImageRunnable(mBitmap));
 		} else {
-			cacheRunnable = new CacheTask(mContext, uri, viewHashCode, request);
-			registRequest(viewHashCode, cacheRunnable);
-			mCacheExecutor.submit(cacheRunnable);
+			runnable = new CacheTask(mContext, uri, viewHashCode, request);
+			registRequest(viewHashCode, runnable);
+			mCacheExecutor.submit(runnable);
 		}
 	}
 
@@ -103,7 +103,7 @@ public class Gogh {
 		return NewBitmapManager.getInstrance().getBitmapFromMemCache(uri);
 	}
 
-	public static interface MonetListener {
+	public static interface GoghListener {
 		public void onLoaded(ImageView iv, Bitmap bm);
 		public void onFailed();
 	}

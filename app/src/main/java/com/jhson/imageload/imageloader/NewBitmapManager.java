@@ -48,6 +48,9 @@ public class NewBitmapManager {
 	}
 
 	public synchronized Bitmap getBitmapImage(String url, final File file, int width, int height) {
+		if(!file.exists()){
+			return null;
+		}
 		Bitmap bm = null;
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inPreferredConfig = Config.RGB_565;

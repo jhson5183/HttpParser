@@ -88,7 +88,7 @@ public class GoghDownloader {
 					contentLength = entity.getContentLength();
 
 					// " 받다가 중간에 끊어지면 이미 받아놓은 cache파일이 못쓰게 되므로 tmp파일에 작성하고 바꿔치기 한다. "
-					File tmpFile = new File(cachedFile.getAbsolutePath() + ".monettmp");
+					File tmpFile = new File(cachedFile.getAbsolutePath() + ".temp");
 					tmpFile.createNewFile();
 					out = new FileOutputStream(tmpFile);
 					boolean breakFlag = false;
@@ -112,14 +112,15 @@ public class GoghDownloader {
 					}
 					tempOutStream.flush();
 
-					tempOutStream.writeTo(out);
-					
+					if(tmpFile.exists()){
+						tempOutStream.writeTo(out);
+					}
+
 					if (breakFlag)
 						return false;
 
 
 					out.flush();
-					tempOutStream.close();
 					out.close();
 					
 					try {
@@ -128,23 +129,29 @@ public class GoghDownloader {
 					}
 					
 					if (contentLength == current) {
-						result = tmpFile.renameTo(cachedFile);
-						
+						if(tmpFile.exists()){
+							result = tmpFile.renameTo(cachedFile);
+						}
+
 						// 성공적으로 이미지를 캐시한 경우 메모리 캐시에 올린다. 
 						if (result) {
 							//  스트림을 메모리캐시도 시켜둠.
 							BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
 							decodeOptions.inPreferredConfig = Config.RGB_565;
 	//			            decodeOptions.inPurgeable = true;
-							NewBitmapManager.getInstrance().addBitmapToMemoryCache(strUrl, BitmapFactory.decodeByteArray(tempOutStream.toByteArray(), 0, tempOutStream.toByteArray().length, decodeOptions));
+							if(tmpFile.exists()){
+								NewBitmapManager.getInstrance().addBitmapToMemoryCache(strUrl, BitmapFactory.decodeByteArray(tempOutStream.toByteArray(), 0, tempOutStream.toByteArray().length, decodeOptions));
+							}
 						}
 					} else {
 						result = false;
 					}
+					tempOutStream.close();
 
 				} catch (IOException e) {
 
 					Log.e(TAG, "Could not save file from " + request.getURI().toString());
+					e.printStackTrace();
 					if ( mErrorListener != null)
 						mErrorListener.onError("ERROR : " + e.getMessage());
 
@@ -162,6 +169,7 @@ public class GoghDownloader {
 		} catch (IOException e) {
 
 			Log.e(TAG, "Could not load file from " + request.getURI().toString());
+			e.printStackTrace();
 
 		} finally {
 
@@ -170,6 +178,7 @@ public class GoghDownloader {
 					entity.consumeContent();
 				} catch (IOException e) {
 					Log.e(TAG, "Could not save file from " + request.getURI().toString());
+					e.printStackTrace();
 				}
 			}
 

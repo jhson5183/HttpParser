@@ -3,8 +3,6 @@ package com.jhson.imageload.imageloader;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import com.jhson.imageload.imageloader.Gogh.MonetListener;
-
 
 public class GoghRequest {
 
@@ -13,14 +11,14 @@ public class GoghRequest {
 	private String mUrl;
 	private Builder mBuilder;
 	private ImageView mImageView;
-	private Gogh mMonetInstance;
+	private Gogh mGoghInstance;
 
 	public class Builder {
 		public int width = -1;
 		public int height = -1;
 		public int errorId = 0;
-		public MonetListener listener = null;
-		public MonetListener defaultListener = null;
+		public Gogh.GoghListener listener = null;
+		public Gogh.GoghListener defaultListener = null;
 	}
 
 	public class ImageRunnable implements Runnable {
@@ -50,12 +48,12 @@ public class GoghRequest {
 		}
 	}
 
-	public GoghRequest(String url, Gogh monet) {
+	public GoghRequest(String url, Gogh gogh) {
 		this.mUrl = url;
-		this.mMonetInstance = monet;
+		this.mGoghInstance = gogh;
 		this.mBuilder = new Builder();
 
-		mBuilder.defaultListener = new MonetListener() {
+		mBuilder.defaultListener = new Gogh.GoghListener() {
 
 			@Override
 			public void onLoaded(ImageView iv, Bitmap bm) {
@@ -76,18 +74,18 @@ public class GoghRequest {
 		mImageView = imageView;
 		mImageView.setImageBitmap(null);
 
-		mMonetInstance.executeRequest(mUrl, imageView.hashCode(), this);
+		mGoghInstance.executeRequest(mUrl, imageView.hashCode(), this);
 	}
 
 	public void into() {
-		mMonetInstance.executeRequest(mUrl, -1, this);
+		mGoghInstance.executeRequest(mUrl, -1, this);
 	}
 
 	public Builder getBuilder() {
 		return mBuilder;
 	}
 
-	public GoghRequest listener(MonetListener listener) {
+	public GoghRequest listener(Gogh.GoghListener listener) {
 		mBuilder.listener = listener;
 		return this;
 	}

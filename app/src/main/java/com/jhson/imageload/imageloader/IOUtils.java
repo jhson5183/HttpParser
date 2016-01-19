@@ -55,19 +55,8 @@ public final class IOUtils {
 
         if (TextUtils.isEmpty(sPathPrefix)) {
             // 캐시 폴더
-            File cacheDir = null;
-            try {
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    cacheDir = new File(context.getExternalCacheDir(), "/cache");
-                } else {
-                    cacheDir = new File(context.getCacheDir(), "/cache");
-                }
-            } catch (Exception ignore) {
-                Log.w(TAG, "err ", ignore);
-                return null;
-            }
+            File cacheDir = new File(context.getCacheDir(), "/cache");
 
-            // 캐시폴더 없으면 만들어라잉
             if (!cacheDir.exists()) {
                 cacheDir.mkdir();
             }

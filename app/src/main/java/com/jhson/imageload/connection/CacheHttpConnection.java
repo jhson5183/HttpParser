@@ -165,12 +165,8 @@ public class CacheHttpConnection extends HttpConnection{
             if(lenght != contentLenght){
 //                cacheFile.delete();
             }
-
-
         } catch (IOException e) {
-
-            Log.e(TAG, e.getClass().getSimpleName(), e);
-
+            e.printStackTrace();
         } finally {
 
             closeStream(fout);

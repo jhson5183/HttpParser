@@ -17,9 +17,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.DomParserActivity" />
-        <activity android:name=".activity.PullParserActivity" />
-
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jhson.gogh.Gogh;
 import com.jhson.imageload.R;
-import com.jhson.imageload.imageloader.Gogh;
 import com.jhson.imageload.model.ImageModel;
 
 import java.util.List;
